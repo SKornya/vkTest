@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  Group,
+  Header,
+  Panel,
+  PanelHeader,
+  PanelHeaderBack,
+  Placeholder,
+  SimpleCell,
+  View,
+} from '@vkontakte/vkui';
+import { Icon28PaletteOutline, Icon28SettingsOutline, Icon28UserOutline } from '@vkontakte/icons';
+
+import { useState } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activePanel, setActivePanel] = useState('list');
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <View activePanel={activePanel}>
+      <Panel id="list">
+        <PanelHeader>SimpleCell</PanelHeader>
+        <Group header={<Header mode="secondary">Меню</Header>}>
+          <SimpleCell
+            onClick={() => setActivePanel('nothing')}
+            expandable="auto"
+            before={<Icon28UserOutline />}
+          >
+            Аккаунт
+          </SimpleCell>
+          <SimpleCell
+            onClick={() => setActivePanel('nothing')}
+            expandable="auto"
+            before={<Icon28PaletteOutline />}
+          >
+            Внешний вид
+          </SimpleCell>
+          <SimpleCell
+            onClick={() => setActivePanel('nothing')}
+            expandable="auto"
+            before={<Icon28SettingsOutline />}
+          >
+            Основные
+          </SimpleCell>
+        </Group>
+      </Panel>
+      <Panel id="nothing">
+        <PanelHeader
+          before={<PanelHeaderBack onClick={() => setActivePanel('list')} />}
+        >
+          Ничего
+        </PanelHeader>
+        <Placeholder>Тут ничего нет</Placeholder>
+      </Panel>
+    </View>
+  );
 }
 
-export default App
+export default App;
