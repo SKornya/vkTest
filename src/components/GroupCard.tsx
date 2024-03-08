@@ -1,56 +1,71 @@
-import { Icon28PaletteOutline, Icon28SettingsOutline, Icon28UserOutline } from "@vkontakte/icons";
-import { Counter, Group, Header, SimpleCell } from "@vkontakte/vkui";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent } from 'react';
 
-interface User {
-  first_name: string;
-  last_name: string;
-}
+import { Avatar, Counter, Group, Header, SimpleCell } from '@vkontakte/vkui';
+import {
+  Icon24FavoriteOutline,
+  Icon24LockOpenOutline,
+  Icon24LockOutline,
+  Icon28UserOutline,
+} from '@vkontakte/icons';
 
-interface Group {
-  "id": number,
-  "name": string,
-  "closed": boolean,
-  "avatar_color"?: string,
-  "members_count": number,
-  "friends"?: User[]
-}
+import { IGroup } from '../App';
 
 interface GroupCardProps {
-  group: Group;
+  group: IGroup;
   setActivePanel: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedGroupId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-const Groupcard: FunctionComponent<GroupCardProps> = ({ group, setActivePanel }) => {
-
+const GroupCard: FunctionComponent<GroupCardProps> = ({
+  group,
+  setActivePanel,
+  setSelectedGroupId,
+}) => {
   const { id, name, closed, avatar_color, members_count, friends } = group;
 
   return (
     <Group header={<Header mode="primary">{name}</Header>}>
-            <SimpleCell
-              onClick={() => setActivePanel('friends')}
-              expandable="auto"
-              before={<Icon28UserOutline />}
-              indicator={<Counter>10</Counter>}
-            >
-              Аккаунт
-            </SimpleCell>
-            <SimpleCell
-              onClick={() => setActivePanel('friends')}
-              expandable="auto"
-              before={<Icon28PaletteOutline />}
-            >
-              Внешний вид
-            </SimpleCell>
-            <SimpleCell
-              onClick={() => setActivePanel('friends')}
-              expandable="auto"
-              before={<Icon28SettingsOutline />}
-            >
-              Основные
-            </SimpleCell>
-          </Group>
+      {avatar_color && (
+        <SimpleCell
+          expandable="auto"
+          before={
+            <Avatar size={100} style={{ backgroundColor: `${avatar_color}` }} />
+          }
+        />
+      )}
+
+      {closed ? (
+        <SimpleCell expandable="auto" before={<Icon24LockOutline />}>
+          Закрытая группа
+        </SimpleCell>
+      ) : (
+        <SimpleCell expandable="auto" before={<Icon24LockOpenOutline />}>
+          Открытая группа
+        </SimpleCell>
+      )}
+      <SimpleCell
+        expandable="auto"
+        before={<Icon28UserOutline />}
+        indicator={<Counter>{members_count}</Counter>}
+      >
+        Участники
+      </SimpleCell>
+
+      {friends && (
+        <SimpleCell
+          expandable="auto"
+          before={<Icon24FavoriteOutline />}
+          indicator={<Counter>{friends.length}</Counter>}
+          onClick={() => {
+            setSelectedGroupId(id);
+            setActivePanel('friends');
+          }}
+        >
+          Друзья в группе
+        </SimpleCell>
+      )}
+    </Group>
   );
 };
 
-export default Groupcard;
+export default GroupCard;
