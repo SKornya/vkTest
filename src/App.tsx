@@ -90,9 +90,11 @@ function App() {
     <View activePanel={activePanel}>
       <Panel id="groups">
         <PanelHeader style={{ textAlign: 'center' }}>Groups</PanelHeader>
-        {!error && <Filters groups={groups} setFilteredGroups={setFilteredGroups} />}
-        
-        {error && <Group header={error} />}
+        {!error ? (
+          <Filters groups={groups} setFilteredGroups={setFilteredGroups} />
+        ) : (
+          <Group header={error} />
+        )}
 
         {filteredGroups.length
           ? filteredGroups.map((group: IGroup) => {
